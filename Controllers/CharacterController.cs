@@ -1,21 +1,21 @@
 
 using Microsoft.AspNetCore.Mvc;
-using WebApiWOT;
+using WebApiWOT.Services;
+namespace WebApiWOT.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 public class CharacterController : ControllerBase
 {
-    private static List<Character> characters =
-    [
-    new Character { Name = "Rand al'Thor", Age = 22, MagicUser = true, Weapon = "sword", HomeTown = "Emond's Field" },
-    new Character { Name = "Egwene al'Vere", Age = 21, MagicUser = true, Weapon = "Saidar", HomeTown = "Emond's Field" }
-];
+    CharacterService _characterService;
+    public CharacterController(CharacterService characterService){
+        _characterService = characterService;
+    }
 
     [HttpGet]
     public List<Character> GetCharacters()
     {
-        return characters;
+        return _characterService.GetListOfCharacters();
     }
 
     [HttpPost]
@@ -24,16 +24,15 @@ public class CharacterController : ControllerBase
         if(newCharacter is null)
         {
             return BadRequest("data is null");
-        }
-        
-        characters.Add(newCharacter);
-        return CreatedAtAction(nameof(getCharacterByName), new {name = newCharacter.Name}, newCharacter);
+        } 
+        Character createdCharacter = _characterService.CreateCharacter(newCharacter);
+        return CreatedAtAction(nameof(getCharacterByName), new {name = newCharacter.Name}, createdCharacter);
     }
 
     [HttpGet("{name}")]
     public ActionResult<Character> getCharacterByName(string name)
     {
-        var character = characters.FirstOrDefault(word => word.Name == name);
+        var character = _characterService.GetCharacterByName(name);
         if(character is null)
         {
             return NotFound();
@@ -41,20 +40,20 @@ public class CharacterController : ControllerBase
         return Ok(character);
     }
     [HttpDelete("{name}")]
-    public ActionResult deleteCharacterByName(string name)
+    public ActionResult DeleteCharacterByName(string name)
     {
-        var character = characters.FirstOrDefault(character => character.Name == name);
+        var character = _characterService.GetCharacterByName(name);
         if(character is null)
         {
             return NotFound();
         }
-        characters.Remove(character);
+        _characterService.DeleteCharacter(character);
         return NoContent();
     }
     [HttpPatch("{name}")]
     public ActionResult UppdateCharacterByName(string name, [FromBody] Character character)
     {
-        var characterToUpdate = characters.FirstOrDefault(character => character.Name == name);
+        var characterToUpdate = _characterService.GetCharacterByName(name);
         if(characterToUpdate is null)
         {
             return NotFound();
@@ -62,12 +61,8 @@ public class CharacterController : ControllerBase
         if(character is null){
             return BadRequest("character data is null");
         }
-
-        characterToUpdate.Age = character.Age;
-        characterToUpdate.Name = character.Name;
-        characterToUpdate.Weapon = character.Weapon;
-        characterToUpdate.MagicUser = character.MagicUser;
-        characterToUpdate.HomeTown = character.HomeTown;
+        _characterService.UppdateCharacter(characterToUpdate, character);
+        
         return NoContent();
     }
 

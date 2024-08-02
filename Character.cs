@@ -7,5 +7,8 @@ public class Character(){
     public string Weapon{get; set;}
     public bool MagicUser {get; set;}
     public string HomeTown {get; set;}
+
+
+
     
 }
