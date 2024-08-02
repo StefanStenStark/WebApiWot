@@ -19,9 +19,15 @@ public class CharacterController : ControllerBase
     }
 
     [HttpPost]
-    public void CreateCharacter([FromBody] Character newCharacter)
+    public ActionResult CreateCharacter([FromBody] Character newCharacter)
     {
+        if(newCharacter is null)
+        {
+            return BadRequest("data is null");
+        }
+        
         characters.Add(newCharacter);
+        return CreatedAtAction(nameof(getCharacterByName), new {name = newCharacter.Name}, newCharacter);
     }
 
     [HttpGet("{name}")]
