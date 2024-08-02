@@ -52,15 +52,23 @@ public class CharacterController : ControllerBase
         return NoContent();
     }
     [HttpPatch("{name}")]
-    public void UppdateCharacterByName(string name, [FromBody] Character character)
+    public ActionResult UppdateCharacterByName(string name, [FromBody] Character character)
     {
         var characterToUpdate = characters.FirstOrDefault(character => character.Name == name);
+        if(characterToUpdate is null)
+        {
+            return NotFound();
+        }
+        if(character is null){
+            return BadRequest("character data is null");
+        }
 
         characterToUpdate.Age = character.Age;
         characterToUpdate.Name = character.Name;
         characterToUpdate.Weapon = character.Weapon;
         characterToUpdate.MagicUser = character.MagicUser;
         characterToUpdate.HomeTown = character.HomeTown;
+        return NoContent();
     }
 
 }
