@@ -30,11 +30,15 @@ public class CharacterController : ControllerBase
         return characters.FirstOrDefault(word => word.Name == name);
     }
     [HttpDelete("{name}")]
-    public void deleteCharacterByName(string name)
+    public ActionResult deleteCharacterByName(string name)
     {
         var character = characters.FirstOrDefault(character => character.Name == name);
-
+        if(character is null)
+        {
+            return NotFound();
+        }
         characters.Remove(character);
+        return NoContent();
     }
     [HttpPatch("{name}")]
     public void UppdateCharacterByName(string name, [FromBody] Character character)
