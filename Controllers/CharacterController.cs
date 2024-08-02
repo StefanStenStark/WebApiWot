@@ -25,9 +25,14 @@ public class CharacterController : ControllerBase
     }
 
     [HttpGet("{name}")]
-    public Character getCharacterByName(string name)
+    public ActionResult<Character> getCharacterByName(string name)
     {
-        return characters.FirstOrDefault(word => word.Name == name);
+        var character = characters.FirstOrDefault(word => word.Name == name);
+        if(character is null)
+        {
+            return NotFound();
+        }
+        return Ok(character);
     }
     [HttpDelete("{name}")]
     public ActionResult deleteCharacterByName(string name)

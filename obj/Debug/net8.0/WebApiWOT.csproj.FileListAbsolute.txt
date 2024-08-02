@@ -33,3 +33,4 @@
 /Users/salt-dev/Coding/Practice/WebApiWOT/obj/Debug/net8.0/WebApiWOT.pdb
 /Users/salt-dev/Coding/Practice/WebApiWOT/obj/Debug/net8.0/WebApiWOT.genruntimeconfig.cache
 /Users/salt-dev/Coding/Practice/WebApiWOT/obj/Debug/net8.0/ref/WebApiWOT.dll
+/Users/salt-dev/Coding/Practice/WebApiWOT/obj/Debug/net8.0/WebApiWOT.sourcelink.json
